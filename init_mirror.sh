@@ -24,6 +24,9 @@ MIRROR_NAME=DEMO
 # Mirror Member list.
 MIRROR_MEMBERS=BACKUP,REPORT
 
+# PKI Server host:port (PKI Server is installed on master instance)
+PKISERVER=master:52773
+
 # Performed on the master.
 # Configure Public Key Infrastructure Server on this instance and generate certificate in order to configure a mirror using SSL.
 #   See article https://community.intersystems.com/post/creating-ssl-enabled-mirror-intersystems-iris-using-public-key-infrastructure-pki
@@ -41,8 +44,8 @@ Hang 2
 Halt
 END
 }
-
-# Performed by the master, make a backup of /usr/irissys/mgr/myappdata/
+s/mgr/myappdata/
+# Performed by the master, make a backup of /usr/irissy
 make_backup() {
 iris session $ISC_PACKAGE_INSTANCENAME -U %SYS "##class(SYS.Database).DismountDatabase(\"${DATABASE}\")"
 md5sum ${DATABASE}/IRIS.DAT
@@ -63,49 +66,26 @@ iris session $ISC_PACKAGE_INSTANCENAME -U %SYS "##class(SYS.Database).MountDatab
 
 # Configure the "backup" member
 #  - Configure Public Key Infrastructure client to install certificate and use SSL with the mirror.
-#      PKI-Script tools is used for this operation.
-#  - Configure this instance as a failover node on mirror "DEMO" using config-api tools 
-#    with this configuration file /opt/demo/mirror-failover.json 
-backup() {
+#  - Load configuration file /opt/demo/mirror-backup.json if this instance is the backup or 
+#    /opt/demo/mirror-report.json if this instance the report (async R\W mirror node).
+other_node() {
 sleep 5
 iris session $ISC_PACKAGE_INSTANCENAME -U %SYS <<- END
-Do ##class(lscalese.pki.Utils).MirrorBackup("master:52773","")
-Set sc = ##class(Api.Config.Services.Loader).Load("${BACKUP_CONFIG}")
-Set ^log.mirrorconfig(\$i(^log.mirrorconfig)) = \$SYSTEM.Status.GetOneErrorText(sc)
-Halt
-END
-}
-
-# Configure the "backup" member
-#  - Configure Public Key Infrastructure client to install certificate and use SSL with the mirror.
-#  - Configure this instance as an async report read\write node on mirror "DEMO" using config-api tools 
-#    with this configuration file /opt/demo/mirror-async.json 
-report() {
-iris session $ISC_PACKAGE_INSTANCENAME -U %SYS <<- END
-Set sc = ##class(lscalese.pki.Utils).MirrorBackup("master:52773","")
-Set sc = ##class(Api.Config.Services.Loader).Load("${REPORT_CONFIG}")
-Set ^log.mirrorconfig(\$i(^log.mirrorconfig)) = \$SYSTEM.Status.GetOneErrorText(sc)
+Do ##class(lscalese.pki.Utils).MirrorBackup("${PKISERVER}","")
+Set sc = ##class(Api.Config.Services.Loader).Load("$1")
 Halt
 END
 }
 
 if [ "$IRIS_MIRROR_ROLE" == "master" ]
 then
-  master $IRIS_MIRROR_ARBITER
+  master
   make_backup
 elif [ "$IRIS_MIRROR_ROLE" == "backup" ]
 then
   restore_backup
-  backup
+  other_node $BACKUP_CONFIG
 else
   restore_backup
+  other_node $REPORT_CONFIG
 fi
-
-exit 0
-
-# elif [ "$IRIS_MIRROR_ROLE" == "backup" ]; then 
-#  restore_backup
-#  backup
-# else 
-#  restore_backup
-#  backup
