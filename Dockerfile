@@ -1,6 +1,6 @@
-ARG IMAGE=intersystems/iris:2021.1.0.215.0
+ARG IMAGE=containers.intersystems.com/intersystems/iris:2021.1.0.215.0
+# ARG IMAGE=intersystems/iris:2021.1.0.215.0
 FROM $IMAGE
-#FROM containers.intersystems.com/intersystems/iris:2021.1.0.215.0
 
 USER root
 

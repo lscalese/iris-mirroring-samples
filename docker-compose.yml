@@ -1,9 +1,10 @@
-version: '3.6'
+version: '3.7'
 
 services:
   arbiter:
-    image: intersystems/arbiter:2021.1.0.215.0
-#    init: true
+    image: containers.intersystems.com/intersystems/arbiter:2021.1.0.215.0
+#    image: intersystems/arbiter:2021.1.0.215.0
+    init: true
     command: 
       - /usr/local/etc/irissys/startISCAgent.sh 2188
     networks:
