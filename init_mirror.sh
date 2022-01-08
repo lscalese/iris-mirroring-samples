@@ -44,12 +44,14 @@ Hang 2
 Halt
 END
 }
-s/mgr/myappdata/
+
 # Performed by the master, make a backup of /usr/irissy
 make_backup() {
 iris session $ISC_PACKAGE_INSTANCENAME -U %SYS "##class(SYS.Database).DismountDatabase(\"${DATABASE}\")"
 md5sum ${DATABASE}/IRIS.DAT
-cp ${DATABASE}/IRIS.DAT ${BACKUP_FOLDER}/IRIS.DAT
+cp ${DATABASE}/IRIS.DAT ${BACKUP_FOLDER}/IRIS.TMP
+mv ${BACKUP_FOLDER}/IRIS.TMP ${BACKUP_FOLDER}/IRIS.DAT
+chmod 777 ${BACKUP_FOLDER}/IRIS.DAT
 iris session $ISC_PACKAGE_INSTANCENAME -U %SYS "##class(SYS.Database).MountDatabase(\"${DATABASE}\")"
 }
 
@@ -89,3 +91,5 @@ else
   restore_backup
   other_node $REPORT_CONFIG
 fi
+
+exit 0

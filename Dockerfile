@@ -1,5 +1,4 @@
 ARG IMAGE=containers.intersystems.com/intersystems/iris:2021.1.0.215.0
-# ARG IMAGE=intersystems/iris:2021.1.0.215.0
 FROM $IMAGE
 
 USER root
