@@ -69,9 +69,12 @@ mirror-demo-report | 01/09/22-11:03:10:745 (736) 0 [Generic.Event] MirrorClient:
 ### Test
 
 See the mirror monitor (management portal) : http://localhost:81/csp/sys/op/%25CSP.UI.Portal.Mirror.Monitor.zen  
+![Mirror-Monitor](./img/mirror-monitor.png)
+
 See the mirror settings : http://localhost:81/csp/sys/mgr/%25CSP.UI.Portal.Mirror.EditFailover.zen?$NAMESPACE=%25SYS  
 This is the default user and password.  
 
+![Mirror-Configuration](./img/mirror-config.png)
 
 We can test by simply set a global starting by `demo.`
 
