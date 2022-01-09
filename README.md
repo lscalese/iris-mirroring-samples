@@ -68,6 +68,11 @@ mirror-demo-report | 01/09/22-11:03:10:745 (736) 0 [Generic.Event] MirrorClient:
 
 ### Test
 
+See the mirror monitor (management portal) : http://localhost:81/csp/sys/op/%25CSP.UI.Portal.Mirror.Monitor.zen  
+See the mirror settings : http://localhost:81/csp/sys/mgr/%25CSP.UI.Portal.Mirror.EditFailover.zen?$NAMESPACE=%25SYS  
+This is the default user and password.  
+
+
 We can test by simply set a global starting by `demo.`
 
 Open a terminal session on primary server : 
@@ -105,13 +110,3 @@ Failover backup member : http://localhost:82/csp/sys/utilhome.csp
 Read-Write report asyinc member : http://localhost:83/csp/sys/utilhome.csp  
 
 
-## Troubleshoot
-
-### Access denied on build
-
-Perhaps you have `IRIS.DAT` due to a previous run.  
-Simply delete this file an retry.  
-
-```bash
-rm -vf ./backup/IRIS.DAT
-```
