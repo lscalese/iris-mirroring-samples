@@ -37,7 +37,7 @@ sudo chgrp irisowner ./backup
 
 Our [docker-compose.yml](./docker-compose.yml) uses references to `containers.intersystems.com`.  
 So you need to login to Intersystems Containers Registry to pull the used images.  
-If you don't remember your password for the docker login to ICR : 
+If you don't remember your password for the docker login to ICR :  
 
  * Connect to [Worldwide Respnse Center (WRC)](https://wrc.interystems.com) with your credentials.
  * Open this page https://login.intersystems.com/login/SSO.UI.User.ApplicationTokens.cls and you can retrieve your docker login credentials.
@@ -68,11 +68,11 @@ mirror-demo-report | 01/09/22-11:03:10:745 (736) 0 [Generic.Event] MirrorClient:
 
 ### Test
 
-See the mirror monitor (management portal) : http://localhost:81/csp/sys/op/%25CSP.UI.Portal.Mirror.Monitor.zen  
+See the mirror monitor (management portal, this is the default user and password.) : http://localhost:81/csp/sys/op/%25CSP.UI.Portal.Mirror.Monitor.zen  
 ![Mirror-Monitor](./img/mirror-monitor.png)
 
 See the mirror settings : http://localhost:81/csp/sys/mgr/%25CSP.UI.Portal.Mirror.EditFailover.zen?$NAMESPACE=%25SYS  
-This is the default user and password.  
+
 
 ![Mirror-Configuration](./img/mirror-config.png)
 
@@ -110,6 +110,6 @@ W ^demo.test
 
 Master : http://localhost:81/csp/sys/utilhome.csp  
 Failover backup member : http://localhost:82/csp/sys/utilhome.csp  
-Read-Write report asyinc member : http://localhost:83/csp/sys/utilhome.csp  
+Read-Write report async member : http://localhost:83/csp/sys/utilhome.csp  
 
 
