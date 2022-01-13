@@ -27,9 +27,7 @@ If irisowner, irisuser groups and users does not exists yet on your system, crea
 
 ```bash
 sudo useradd --uid 51773 --user-group irisowner
-sudo useradd --uid 52773 --user-group irisuser
 sudo groupmod --gid 51773 irisowner
-sudo groupmod --gid 52773 irisuser
 sudo chgrp irisowner ./backup
 ```
 
@@ -111,5 +109,3 @@ W ^demo.test
 Master : http://localhost:81/csp/sys/utilhome.csp  
 Failover backup member : http://localhost:82/csp/sys/utilhome.csp  
 Read-Write report async member : http://localhost:83/csp/sys/utilhome.csp  
-
-
