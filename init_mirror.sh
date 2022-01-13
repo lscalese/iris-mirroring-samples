@@ -15,9 +15,6 @@ BACKUP_CONFIG=/opt/demo/mirror-backup.json
 # Mirror configuration file in json config-api format for the report async node.
 REPORT_CONFIG=/opt/demo/mirror-report.json
 
-# Initial configuration (Before create mirror).
-INITIAL_CONFIG=/opt/demo/simple-config.json
-
 # The mirror name...
 MIRROR_NAME=DEMO
 
@@ -39,7 +36,7 @@ iris session $ISC_PACKAGE_INSTANCENAME -U %SYS <<- END
 Do ##class(lscalese.pki.Utils).MirrorMaster(,"")
 Set sc = ##class(Api.Config.Services.Loader).Load("${MASTER_CONFIG}")
 Set ^log.mirrorconfig(\$i(^log.mirrorconfig)) = \$SYSTEM.Status.GetOneErrorText(sc)
-Job ##class(Api.Config.Services.SYS.MirrorMaster).AuthorizeNewMembers("${MIRROR_MEMBERS}","${MIRROR_NAME}")
+Job ##class(Api.Config.Services.SYS.MirrorMaster).AuthorizeNewMembers("${MIRROR_MEMBERS}","${MIRROR_NAME}",600)
 Hang 2
 Halt
 END
