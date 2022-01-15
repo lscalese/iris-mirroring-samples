@@ -19,7 +19,7 @@ services:
 
   master:
     build: .
-    image: demoapp
+    image: mirror-demo
     container_name: mirror-demo-master
     networks:
       app_net:
@@ -41,7 +41,7 @@ services:
       - NET_ADMIN
 
   backup:
-    image: demoapp
+    image: mirror-demo
     container_name: mirror-demo-backup
     networks:
       app_net:
@@ -63,7 +63,7 @@ services:
       - NET_ADMIN
 
   report:
-    image: demoapp
+    image: mirror-demo
     container_name: mirror-demo-report
     networks:
       app_net:

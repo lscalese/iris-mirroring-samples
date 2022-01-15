@@ -35,10 +35,7 @@ sudo chgrp irisowner ./backup
 
 Our [docker-compose.yml](./docker-compose.yml) uses references to `containers.intersystems.com`.  
 So you need to login to Intersystems Containers Registry to pull the used images.  
-If you don't remember your password for the docker login to ICR :  
-
- * Connect to [Worldwide Respnse Center (WRC)](https://wrc.interystems.com) with your credentials.
- * Open this page https://login.intersystems.com/login/SSO.UI.User.ApplicationTokens.cls and you can retrieve your docker login credentials.
+If you don't remember your password for the docker login to ICR, open this page https://login.intersystems.com/login/SSO.UI.User.ApplicationTokens.cls and you can retrieve your docker token.  
 
 
 

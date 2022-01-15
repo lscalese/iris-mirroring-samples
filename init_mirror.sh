@@ -33,7 +33,7 @@ PKISERVER=master:52773
 master() {
 rm -rf $BACKUP_FOLDER/IRIS.DAT
 iris session $ISC_PACKAGE_INSTANCENAME -U %SYS <<- END
-Do ##class(lscalese.pki.Utils).MirrorMaster(,"")
+Do ##class(lscalese.pki.Utils).MirrorMaster(,"",,,,"${MIRROR_MEMBERS}")
 Set sc = ##class(Api.Config.Services.Loader).Load("${MASTER_CONFIG}")
 Set ^log.mirrorconfig(\$i(^log.mirrorconfig)) = \$SYSTEM.Status.GetOneErrorText(sc)
 Job ##class(Api.Config.Services.SYS.MirrorMaster).AuthorizeNewMembers("${MIRROR_MEMBERS}","${MIRROR_NAME}",600)
