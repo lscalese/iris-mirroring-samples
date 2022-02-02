@@ -1,7 +1,7 @@
 {
     "Defaults":{
         "MirrorName" : "Demo",
-        "AgentAdress" : "172.16.238.20",
+        "AgentAddress" : "172.16.238.20",
         "SystemName" : "backup",
         "PrimaryInstanceName" : "IRIS",
         "VirtualAddressInterface" : "eth0",
@@ -19,7 +19,7 @@
                 "Name" : "${MirrorName}",
                 "SystemName" : "${SystemName}",
                 "InstanceName" : "${PrimaryInstanceName}",
-                "AgentAddress" : "${AgentAdress}",
+                "AgentAddress" : "${AgentAddress}",
                 "AgentPort" : "2188",
                 "AsyncMember" : false,
                 "AsyncMemberType" : ""

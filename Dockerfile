@@ -1,4 +1,7 @@
 ARG IMAGE=containers.intersystems.com/intersystems/iris:2021.1.0.215.0
+# currently there is an issue with 2021.2.0.617.0, work in progress...
+# ARG IMAGE=containers.intersystems.com/intersystems/iris:2021.2.0.617.0
+
 FROM $IMAGE
 
 USER root
