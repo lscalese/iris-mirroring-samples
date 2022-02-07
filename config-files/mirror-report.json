@@ -8,11 +8,6 @@
         "DBDir" : "${MGRDIR}myappdata/",
         "MirrorAddress" : "172.16.220.40"
     },
-    "Security.Services" : {
-        "%Service_Mirror" : {
-            "Enabled" : true
-        }
-    },
     "SYS.MirrorFailOver" : {
         "${MirrorName}" : {
             "Config": {

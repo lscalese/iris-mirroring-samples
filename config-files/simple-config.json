@@ -17,5 +17,10 @@
             "Name" : "demo.*",
             "Database" : "${DBDATANAME}"
         }]
+    },
+    "Security.Services" : {
+        "%Service_Mirror" : {
+            "Enabled" : true
+        }
     }
 }

@@ -10,11 +10,6 @@
         "DBDir" : "${MGRDIR}myappdata/",
         "DBName" : "MYAPPDATA"
     },
-    "Security.Services" : {
-        "%Service_Mirror" : {
-            "Enabled" : true
-        }
-    },
     "SYS.MirrorMaster" : {
         "${MirrorName}" : {
             "Config" : {
