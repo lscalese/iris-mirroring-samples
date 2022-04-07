@@ -1,35 +1,31 @@
 {
-    "Defaults":{
-        "MirrorName" : "Demo",
-        "AgentAddress" : "172.16.238.20",
-        "SystemName" : "backup",
-        "PrimaryInstanceName" : "IRIS",
-        "VirtualAddressInterface" : "eth0",
-        "DBDir" : "${MGRDIR}myappdata/",
-        "MirrorAddress" : "172.16.220.30"
+    "Security.Services" : {
+        "%Service_Mirror" : {
+            "Enabled" : true
+        }
     },
     "SYS.MirrorFailOver" : {
-        "${MirrorName}" : {
+        "Demo" : {
             "Config": {
-                "Name" : "${MirrorName}",
-                "SystemName" : "${SystemName}",
-                "InstanceName" : "${PrimaryInstanceName}",
-                "AgentAddress" : "${AgentAddress}",
+                "Name" : "Demo",
+                "SystemName" : "backup",
+                "InstanceName" : "IRIS",
+                "AgentAddress" : "${MASTER_APP_NET_IP}",
                 "AgentPort" : "2188",
                 "AsyncMember" : false,
                 "AsyncMemberType" : ""
             },
             "Databases" : [{
-                 "Directory" : "${DBDir}"
+                 "Directory" : "/usr/irissys/mgr/myappdata/"
             }],
             "LocalInfo" : {
-                "VirtualAddressInterface" : "${VirtualAddressInterface}",
-                "MirrorAddress": "${MirrorAddress}"
+                "VirtualAddressInterface" : "eth0",
+                "MirrorAddress": "${BACKUP_MIRROR_NET_IP}"
             },
             "SSLInfo" : {
-                "CAFile" : "/usr/irissys/mgr/CA_Server.cer",
-                "CertificateFile" : "/usr/irissys/mgr/backup_client.cer",
-                "PrivateKeyFile" : "/usr/irissys/mgr/backup_client.key",
+                "CAFile" : "/certificates/CA_Server.cer",
+                "CertificateFile" : "/certificates/backup_server.cer",
+                "PrivateKeyFile" : "/certificates/backup_server.key",
                 "PrivateKeyPassword" : "",
                 "PrivateKeyType" : "2"
             }

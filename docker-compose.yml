@@ -1,3 +1,7 @@
+# Variables are defined in .env file
+# to show the resolved docker-compose file, execute 
+# docker-compose config
+
 version: '3.7'
 
 services:
@@ -9,11 +13,11 @@ services:
       - /usr/local/etc/irissys/startISCAgent.sh 2188
     networks:
       app_net:
-        ipv4_address: 172.16.238.10
+        ipv4_address: ${ARBITER_IP}
     extra_hosts:
-      - "master:172.16.238.20"
-      - "backup:172.16.238.30"
-      - "report:172.16.238.40"
+      - "master:${MASTER_APP_NET_IP}"
+      - "backup:${BACKUP_APP_NET_IP}"
+      - "report:${REPORT_APP_NET_IP}"
     cap_add:
       - NET_ADMIN
 
@@ -23,75 +27,106 @@ services:
     container_name: mirror-demo-master
     networks:
       app_net:
-        ipv4_address: 172.16.238.20
+        ipv4_address: ${MASTER_APP_NET_IP}
       mirror_net:
-        ipv4_address: 172.16.220.20
+        ipv4_address: ${MASTER_MIRROR_NET_IP}
     environment: 
       - IRIS_MIRROR_ROLE=master
+      - WEBGATEWAY_IP=${WEBGATEWAY_IP}
+      - MASTER_APP_NET_IP=${MASTER_APP_NET_IP}
+      - MASTER_MIRROR_NET_IP=${MASTER_MIRROR_NET_IP}
+      - ARBITER_IP=${ARBITER_IP}
+      - IRIS_VIRTUAL_IP=${IRIS_VIRTUAL_IP}
     ports:
       - 81:52773
     volumes: 
       - ./backup:/opt/backup
       - ./init_mirror.sh:/init_mirror.sh
+      # Mount certificates
+      - ./certificates/master_server.cer:/certificates/master_server.cer
+      - ./certificates/master_server.key:/certificates/master_server.key
+      - ./certificates/CA_Server.cer:/certificates/CA_Server.cer
+      #- ~/iris.key:/usr/irissys/mgr/iris.key
     hostname: master
     extra_hosts:
-      - "backup:172.16.238.30"
-      - "report:172.16.238.40"
+      - "backup:${BACKUP_APP_NET_IP}"
+      - "report:${REPORT_APP_NET_IP}"
     cap_add:
       - NET_ADMIN
+    command: ["-a", "/init_mirror.sh"]
 
   backup:
     image: mirror-demo
     container_name: mirror-demo-backup
     networks:
       app_net:
-        ipv4_address: 172.16.238.30
+        ipv4_address: ${BACKUP_APP_NET_IP}
       mirror_net:
-        ipv4_address: 172.16.220.30
+        ipv4_address: ${BACKUP_MIRROR_NET_IP}
     ports:
       - 82:52773
     environment: 
       - IRIS_MIRROR_ROLE=backup
+      - WEBGATEWAY_IP=${WEBGATEWAY_IP}
+      - BACKUP_MIRROR_NET_IP=${BACKUP_MIRROR_NET_IP}
+      - MASTER_APP_NET_IP=${MASTER_APP_NET_IP}
+      - BACKUP_APP_NET_IP=${BACKUP_APP_NET_IP}
     volumes: 
       - ./backup:/opt/backup
       - ./init_mirror.sh:/init_mirror.sh
+      # Mount certificates
+      - ./certificates/backup_server.cer:/certificates/backup_server.cer
+      - ./certificates/backup_server.key:/certificates/backup_server.key
+      - ./certificates/CA_Server.cer:/certificates/CA_Server.cer
+      #- ~/iris.key:/usr/irissys/mgr/iris.key
     hostname: backup
     extra_hosts:
-      - "master:172.16.238.20"
-      - "report:172.16.238.40"
+      - "master:${MASTER_APP_NET_IP}"
+      - "report:${REPORT_APP_NET_IP}"
     cap_add:
       - NET_ADMIN
+    command: ["-a", "/init_mirror.sh"]
 
   report:
     image: mirror-demo
     container_name: mirror-demo-report
     networks:
       app_net:
-        ipv4_address: 172.16.238.40
+        ipv4_address: ${REPORT_APP_NET_IP}
       mirror_net:
-        ipv4_address: 172.16.220.40
+        ipv4_address: ${REPORT_MIRROR_NET_IP}
     ports:
       - 83:52773
     environment: 
       - IRIS_MIRROR_ROLE=report
+      - WEBGATEWAY_IP=${WEBGATEWAY_IP}
+      - MASTER_APP_NET_IP=${MASTER_APP_NET_IP}
+      - REPORT_MIRROR_NET_IP=${REPORT_MIRROR_NET_IP}
+      - REPORT_APP_NET_IP=${REPORT_APP_NET_IP}
     volumes: 
       - ./backup:/opt/backup
       - ./init_mirror.sh:/init_mirror.sh
+      # Mount certificates
+      - ./certificates/report_server.cer:/certificates/report_server.cer
+      - ./certificates/report_server.key:/certificates/report_server.key
+      - ./certificates/CA_Server.cer:/certificates/CA_Server.cer
+      #- ~/iris.key:/usr/irissys/mgr/iris.key
     hostname: report
     extra_hosts:
-      - "master:172.16.238.20"
-      - "report:172.16.238.40"
+      - "master:${MASTER_APP_NET_IP}"
+      - "backup:${BACKUP_APP_NET_IP}"
     cap_add:
       - NET_ADMIN
+    command: ["-a", "/init_mirror.sh"]
   
 networks:
   app_net:
     ipam:
       driver: default
       config:
-        - subnet: "172.16.238.0/24"
+        - subnet: "${APP_NET_SUBNET}"
   mirror_net:
     ipam:
       driver: default
       config:
-        - subnet: "172.16.220.0/24"
+        - subnet: "${MIRROR_NET_SUBNET}"

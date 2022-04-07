@@ -43,6 +43,29 @@ If you don't remember your password for the docker login to ICR, open this page 
 docker login -u="YourWRCLogin" -p="YourPassWord" containers.intersystems.com
 ```
 
+### Generate certificates
+
+
+```
+# sudo is needed due chown, chgrp, chmod ...
+sudo ./gen-certificates.sh
+```
+
+Generated certficates will be in `./certificates` directory for IRIS instances.  
+
+Certficates files overview : 
+
+| File | Container | Description |
+|--- |--- |--- |
+| ./certificates/CA_Server.cer | webgateway,master,backup,report | Authority server certificate|
+| ./certificates/master_server.cer | master | Certificate for IRIS master instance (used for mirror and wegateway communication encryption) |
+| ./certificates/master_server.key | master | Related private key |
+| ./certificates/backup_server.cer | backup | Certificate for IRIS backup instance (used for mirror and wegateway communication encryption) |
+| ./certificates/backup_server.key | backup | Related private key |
+| ./certificates/report_server.cer | report | Certificate for IRIS report instance (used for mirror and wegateway communication encryption) |
+| ./certificates/report_server.key | report | Related private key |
+
+
 ### Build and run containers
 
 ```
