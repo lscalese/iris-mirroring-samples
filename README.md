@@ -27,7 +27,9 @@ If irisowner, irisuser groups and users does not exists yet on your system, crea
 
 ```bash
 sudo useradd --uid 51773 --user-group irisowner
+sudo useradd --uid 52773 --user-group irisuser
 sudo groupmod --gid 51773 irisowner
+sudo groupmod --gid 52773 irisuser
 sudo chgrp irisowner ./backup
 ```
 
