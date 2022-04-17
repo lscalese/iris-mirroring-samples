@@ -31,8 +31,6 @@ services:
       mirror_net:
         ipv4_address: ${MASTER_MIRROR_NET_IP}
     environment: 
-      - IRIS_MIRROR_ROLE=master
-      - WEBGATEWAY_IP=${WEBGATEWAY_IP}
       - MASTER_APP_NET_IP=${MASTER_APP_NET_IP}
       - MASTER_MIRROR_NET_IP=${MASTER_MIRROR_NET_IP}
       - ARBITER_IP=${ARBITER_IP}
@@ -41,7 +39,7 @@ services:
       - 81:52773
     volumes: 
       - ./backup:/opt/backup
-      - ./init_mirror.sh:/init_mirror.sh
+      - ./init_master.sh:/init_master.sh
       # Mount certificates
       - ./certificates/master_server.cer:/certificates/master_server.cer
       - ./certificates/master_server.key:/certificates/master_server.key
@@ -53,7 +51,7 @@ services:
       - "report:${REPORT_APP_NET_IP}"
     cap_add:
       - NET_ADMIN
-    command: ["-a", "/init_mirror.sh"]
+    command: ["--check-caps", "false", "-a", "/init_master.sh"]
 
   backup:
     image: mirror-demo
@@ -66,14 +64,12 @@ services:
     ports:
       - 82:52773
     environment: 
-      - IRIS_MIRROR_ROLE=backup
-      - WEBGATEWAY_IP=${WEBGATEWAY_IP}
       - BACKUP_MIRROR_NET_IP=${BACKUP_MIRROR_NET_IP}
       - MASTER_APP_NET_IP=${MASTER_APP_NET_IP}
       - BACKUP_APP_NET_IP=${BACKUP_APP_NET_IP}
     volumes: 
       - ./backup:/opt/backup
-      - ./init_mirror.sh:/init_mirror.sh
+      - ./init_backup.sh:/init_backup.sh
       # Mount certificates
       - ./certificates/backup_server.cer:/certificates/backup_server.cer
       - ./certificates/backup_server.key:/certificates/backup_server.key
@@ -85,7 +81,7 @@ services:
       - "report:${REPORT_APP_NET_IP}"
     cap_add:
       - NET_ADMIN
-    command: ["-a", "/init_mirror.sh"]
+    command: ["--check-caps", "false", "-a", "/init_backup.sh"]
 
   report:
     image: mirror-demo
@@ -98,14 +94,12 @@ services:
     ports:
       - 83:52773
     environment: 
-      - IRIS_MIRROR_ROLE=report
-      - WEBGATEWAY_IP=${WEBGATEWAY_IP}
       - MASTER_APP_NET_IP=${MASTER_APP_NET_IP}
       - REPORT_MIRROR_NET_IP=${REPORT_MIRROR_NET_IP}
       - REPORT_APP_NET_IP=${REPORT_APP_NET_IP}
     volumes: 
       - ./backup:/opt/backup
-      - ./init_mirror.sh:/init_mirror.sh
+      - ./init_report.sh:/init_report.sh
       # Mount certificates
       - ./certificates/report_server.cer:/certificates/report_server.cer
       - ./certificates/report_server.key:/certificates/report_server.key
@@ -117,7 +111,7 @@ services:
       - "backup:${BACKUP_APP_NET_IP}"
     cap_add:
       - NET_ADMIN
-    command: ["-a", "/init_mirror.sh"]
+    command: ["--check-caps", "false","-a", "/init_report.sh"]
   
 networks:
   app_net:

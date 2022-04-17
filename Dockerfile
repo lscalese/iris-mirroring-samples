@@ -45,4 +45,4 @@ zpm "install config-api" \
 Set sc = ##class(Api.Config.Services.Loader).Load("/opt/demo/simple-config.json")
 
 # Copy the mirror initialization script. 
-COPY init_mirror.sh /
+# COPY init_mirror.sh / # removed and replaced by init_primary.sh, init_master.sh, init_report.sh and mounted at container startup.

@@ -9,12 +9,6 @@ BACKUP_FOLDER=/opt/backup
 # Mirror configuration file in json config-api format for the master node.
 MASTER_CONFIG=/opt/demo/mirror-master.json
 
-# Mirror configuration file in json config-api format for the backup node.
-BACKUP_CONFIG=/opt/demo/mirror-backup.json
-
-# Mirror configuration file in json config-api format for the report async node.
-REPORT_CONFIG=/opt/demo/mirror-report.json
-
 # The mirror name...
 MIRROR_NAME=DEMO
 
@@ -24,7 +18,7 @@ MIRROR_MEMBERS=BACKUP,REPORT
 # Performed on the master.
 # Load the mirror configuration using config-api with /opt/demo/simple-config.json file.
 # Start a Job to auto-accept other members named "backup" and "report" to join the mirror (avoid manuel validation in portal management).
-master() {
+configure_master() {
 rm -rf $BACKUP_FOLDER/IRIS.DAT
 envsubst < ${MASTER_CONFIG} > ${MASTER_CONFIG}.resolved
 iris session $ISC_PACKAGE_INSTANCENAME -U %SYS <<- END
@@ -36,7 +30,7 @@ Halt
 END
 }
 
-# Performed by the master, make a backup of /usr/irissy
+# Performed by the master, make a backup of /usr/irissys/mgr/myappdata
 make_backup() {
 iris session $ISC_PACKAGE_INSTANCENAME -U %SYS "##class(SYS.Database).DismountDatabase(\"${DATABASE}\")"
 md5sum ${DATABASE}/IRIS.DAT
@@ -46,40 +40,7 @@ chmod 777 ${BACKUP_FOLDER}/IRIS.DAT
 iris session $ISC_PACKAGE_INSTANCENAME -U %SYS "##class(SYS.Database).MountDatabase(\"${DATABASE}\")"
 }
 
-# Restore the mirrored database "myappdata".  This restore is performed on "backup" and "report" node.
-restore_backup() {
-sleep 5
-while [ ! -f $BACKUP_FOLDER/IRIS.DAT ]; do sleep 1; done
-sleep 2
-iris session $ISC_PACKAGE_INSTANCENAME -U %SYS "##class(SYS.Database).DismountDatabase(\"${DATABASE}\")"
-cp $BACKUP_FOLDER/IRIS.DAT $DATABASE/IRIS.DAT
-md5sum $DATABASE/IRIS.DAT
-iris session $ISC_PACKAGE_INSTANCENAME -U %SYS "##class(SYS.Database).MountDatabase(\"${DATABASE}\")"
-}
-
-# Configure the "backup" member
-#  - Load configuration file /opt/demo/mirror-backup.json if this instance is the backup or 
-#    /opt/demo/mirror-report.json if this instance the report (async R\W mirror node).
-other_node() {
-sleep 5
-envsubst < $1 > $1.resolved
-iris session $ISC_PACKAGE_INSTANCENAME -U %SYS <<- END
-Set sc = ##class(Api.Config.Services.Loader).Load("$1.resolved")
-Halt
-END
-}
-
-if [ "$IRIS_MIRROR_ROLE" == "master" ]
-then
-  master
-  make_backup
-elif [ "$IRIS_MIRROR_ROLE" == "backup" ]
-then
-  restore_backup
-  other_node $BACKUP_CONFIG
-else
-  restore_backup
-  other_node $REPORT_CONFIG
-fi
+configure_master
+make_backup
 
 exit 0
